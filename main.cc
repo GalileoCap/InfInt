@@ -14,6 +14,12 @@ struct InfInt {
   struct InfInt operator+(T);
   struct InfInt operator+(struct InfInt&);
 
+  struct InfInt operator*(T);
+  struct InfInt operator*(struct InfInt&);
+
+  bool operator<(T);
+  bool operator<(struct InfInt&);
+
   void addAt(uint idx, T x);
 
   void print() const;
@@ -45,6 +51,38 @@ struct InfInt<T> InfInt<T>::operator+(struct InfInt &other) {
     res.addAt(i, other.parts[i]);
 
   return res;
+}
+
+template<typename T>
+struct InfInt<T> InfInt<T>::operator*(T x) {
+  struct InfInt<T> tmp(x);
+  return (*this) * tmp;
+}
+
+template<typename T>
+struct InfInt<T> InfInt<T>::operator*(struct InfInt &other) {
+  struct InfInt<T> res(0);
+  for (struct InfInt<T> i(0); i < other; i = i + 1)
+    res = res + *this;
+  return res;
+}
+
+template<typename T>
+bool InfInt<T>::operator<(T x) {
+  return parts[0] < x && parts.size() == 1;
+}
+
+template<typename T>
+bool InfInt<T>::operator<(struct InfInt &other) {
+  if (parts.size() == other.parts.size()) {
+    for (uint i = 0; i < parts.size(); i++) {
+      uint idx = parts.size() - i - 1; // Reverse
+      if (parts[idx] < other.parts[idx])
+        return true;
+    }
+
+    return false;
+  } else return parts.size() < other.parts.size(); 
 }
 
 template<typename T>
@@ -83,6 +121,9 @@ int main() {
   x.print();
 
   x = x + 255;
+  x.print();
+
+  x = y * 2;
   x.print();
 
   return 0;
