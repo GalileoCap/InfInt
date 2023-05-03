@@ -1,11 +1,14 @@
-BIN = 'infInt'
+BUILDD = './build'
+BIN = f'{BUILDD}/infInt'
 
 def Taskcompile():
   return {
-    'deps': ['main.cc'],
+    'deps': ['src/main.cc', 'src/infint.hpp'],
+    'outs': [BUILDD, BIN],
 
     'actions': [
-      f'g++ main.cc -o {BIN}',
+      f'mkdir -p {BUILDD}',
+      f'g++ src/main.cc -o {BIN}',
     ],
   }
 

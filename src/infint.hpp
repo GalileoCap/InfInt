@@ -1,9 +1,8 @@
+#pragma once
+
 #include <iostream>
 #include <vector>
 
-using uchar = unsigned char;
-using ushort = unsigned short;
-using uint = unsigned int;
 using ulong = unsigned long;
 
 template<typename T>
@@ -20,7 +19,7 @@ struct InfInt {
   bool operator<(T);
   bool operator<(struct InfInt&);
 
-  void addAt(uint idx, T x);
+  void addAt(ulong idx, T x);
 
   void print() const;
 
@@ -47,7 +46,7 @@ struct InfInt<T> InfInt<T>::operator+(struct InfInt &other) {
 
   struct InfInt<T> res(*this);
 
-  for (uint i = 0; i < other.parts.size(); i++)
+  for (ulong i = 0; i < other.parts.size(); i++)
     res.addAt(i, other.parts[i]);
 
   return res;
@@ -75,8 +74,8 @@ bool InfInt<T>::operator<(T x) {
 template<typename T>
 bool InfInt<T>::operator<(struct InfInt &other) {
   if (parts.size() == other.parts.size()) {
-    for (uint i = 0; i < parts.size(); i++) {
-      uint idx = parts.size() - i - 1; // Reverse
+    for (ulong i = 0; i < parts.size(); i++) {
+      ulong idx = parts.size() - i - 1; // Reverse
       if (parts[idx] < other.parts[idx])
         return true;
     }
@@ -86,7 +85,7 @@ bool InfInt<T>::operator<(struct InfInt &other) {
 }
 
 template<typename T>
-void InfInt<T>::addAt(uint idx, T x) {
+void InfInt<T>::addAt(ulong idx, T x) {
   if (x == 0) return;
   else if (idx == parts.size()) {
     parts.push_back(x);
@@ -108,23 +107,4 @@ void InfInt<T>::print() const {
   for (auto it = parts.rbegin(); it != parts.rend(); ++it)
     std::cout << (ulong)*it << ", "; // NOTE: In base T
   std::cout << std::endl;
-}
-
-int main() {
-  struct InfInt<uchar> x({255, 255}),
-                       y(255);
-
-  x = x + y;
-  x.print();
-
-  x = x + 3;
-  x.print();
-
-  x = x + 255;
-  x.print();
-
-  x = y * 2;
-  x.print();
-
-  return 0;
 }
